@@ -95,8 +95,7 @@ class NotifyServer(StoppableThreadingTCPServer):
         self.channel_states = {}
 
 class Notify(callbacks.Plugin):
-    """Add the help for "@plugin help Notify" here
-    This should describe *how* to use this plugin."""
+    """This plugin relays messages passed to its TCP server to an IRC channel."""
     threaded = True
     def __init__(self, irc):
         self.__parent = super(Notify, self)
