@@ -16,11 +16,15 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     conf.registerPlugin('Notify', True)
 
-
 Notify = conf.registerPlugin('Notify')
 # This is where your configuration variables (if any) should go.  For example:
 # conf.registerGlobalValue(Notify, 'someConfigVariableName',
 #     registry.Boolean(False, """Help for someConfigVariableName."""))
-
+conf.registerGlobalValue(Notify, 'server_address',
+    registry.String('0.0.0.0',
+                    """Address for the IRC notification server to listen on"""))
+conf.registerGlobalValue(Notify, 'server_port',
+    registry.PositiveInteger(5050,
+                    """Port for the IRC notification server to listen on"""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
