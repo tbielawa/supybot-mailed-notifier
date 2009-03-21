@@ -7,8 +7,8 @@ Summary:        Notification plugin for Supybot
 
 Group:          Applications/Internet
 License:        BSD
-URL:            http://fedorapeople.org/gitweb?p=ricky/public_git/supybot-notify.git;a=summary
-Source0:        http://ricky.fedorapeople.org/%{name}/%{name}-%{version}.tar.bz2
+URL:            http://git.fedorahosted.org/git/supybot-notify.git
+Source0:        https://fedorahosted.org/released/supybot-notify/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       supybot
