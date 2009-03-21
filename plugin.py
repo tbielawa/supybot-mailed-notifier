@@ -130,7 +130,6 @@ class Notify(callbacks.Plugin):
         self.server_thread.start()
 
     def notifications(self, irc, msg, args, channel, state):
-        print channel
         if state is None:
             irc.reply("Notifications for %s: %s" % (channel,
                 self.server.channel_states.get(channel, "on")))
