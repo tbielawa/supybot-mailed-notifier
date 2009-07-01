@@ -136,8 +136,10 @@ class Notify(callbacks.Plugin):
         else:
             if state:
                 self.server.channel_states[channel] = "on"
+                irc.reply("Notifications for %s are now on" % channel )
             else:
                 self.server.channel_states[channel] = "off"
+                irc.reply("Notifications for %s are now off" % channel )
 
     notifications = wrap(notifications, ['inChannel', optional('boolean')])
 
