@@ -48,5 +48,7 @@ conf.registerGlobalValue(Notify, 'server_address',
 conf.registerGlobalValue(Notify, 'server_port',
     registry.PositiveInteger(5050,
                     """Port for the IRC notification server to listen on"""))
+conf.registerGlobalValue(Notify, 'use_notice',
+    registry.Boolean(False, """Use notices instead of privmsgs"""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

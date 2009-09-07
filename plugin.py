@@ -50,7 +50,10 @@ class NotifyServerHandler(SocketServer.StreamRequestHandler):
                 if not channel or not text:
                     continue
                 if self.server.channel_states.get(channel, "on") == "on":
-                    msg = ircmsgs.privmsg(channel, text)
+                    if self.registryValue('use_notice'):
+                        msg = ircmsgs.notice(channel, text)
+                    else:
+                        msg = ircmsgs.privmsg(channel, text)
                     for irc in world.ircs:
                         if channel in irc.state.channels:
                             irc.queueMsg(msg)
