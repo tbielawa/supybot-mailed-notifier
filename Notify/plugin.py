@@ -50,15 +50,18 @@ class NotifyServerHandler(SocketServer.StreamRequestHandler):
                 if not channel or not text:
                     continue
                 if self.server.channel_states.get(channel, "on") == "on":
-                    if self.registryValue('use_notice'):
+                    if self.server.registryValue('use_notice'):
                         msg = ircmsgs.notice(channel, text)
                     else:
                         msg = ircmsgs.privmsg(channel, text)
                     for irc in world.ircs:
                         if channel in irc.state.channels:
                             irc.queueMsg(msg)
-        except:
-            pass
+        except BaseException as e:
+            """In the future there should be specific exception
+            handlers here. Until then we'll just print out the base
+            one."""
+            print e
 
 class StoppableThreadingTCPServer(SocketServer.ThreadingTCPServer):
     '''ThreadingTCPServer with shutdown capability copied from Python SVN'''
@@ -128,6 +131,7 @@ class Notify(callbacks.Plugin):
         self.host = self.registryValue('server_address')
         self.port = self.registryValue('server_port')
         self.server = NotifyServer((self.host, self.port), NotifyServerHandler)
+        self.server.registryValue = self.registryValue
         self.server_thread = threading.Thread(target=self.server.serve_forever)
         self.server_thread.setDaemon(True)
         self.server_thread.start()

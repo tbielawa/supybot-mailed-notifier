@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+import sys
+import re
+import mailbox
+from socket import *
+
+
+def notify_channel(msg, channel="#lcseesystems"):
+    """Connect to the host:port that the announcer bot is listening on
+    for '#channel message...' style input."""
+    HOST = '127.0.0.1'
+    PORT = 5050
+    announcement = "%s %s" % (channel, msg)
+
+    s = socket(AF_INET, SOCK_STREAM)
+    s.connect((HOST, PORT))
+    s.send(announcement)
+    s.close()
+
+    log_processed(announcement, "/var/www/peopleareducks.com/announcements")
+
+def filter_subject(message):
+    letter = mailbox.mboxMessage(message)
+    subject = None
+    # The objective is to walk all the way into multipart messages
+    # since that's how GroupWise forwards them from my account.
+    for part in letter.walk():
+        if part.get_content_type() == "text/plain":
+            if part["Subject"] is not None:
+                subject = ''.join(part["Subject"].split("\n"))
+            else:
+                break
+
+    if subject is None:
+        return None
+
+    # These are the regular expressions we're going to use to match
+    # our subjects.
+    PKGSUBJECT = re.compile(r"updated to Version:")
+    NAGIOSSUBJECT = re.compile(r"(UP|DOWN|RECOVERY|PROBLEM) alert")
+    rest = subject.partition(" ")[2]
+
+    # Package
+    if PKGSUBJECT.search(subject) is not None:
+        notify_channel(subject)
+
+    # Nagios
+    if NAGIOSSUBJECT.search(subject) is not None:
+        notify_channel(rest)
+
+def log_processed(input, dest="/tmp/subjectifier-stdin.log"):
+    f = open(dest, 'w+')
+    f.write(input)
+    f.flush()
+    f.close()
+
+
+if __name__ == "__main__":
+############################################
+## To work from STDIN (ex: postfix delivery)
+## Uncomment the following two lines.
+    message = ''.join([ l for l in sys.stdin ])
+    log_processed(message)
+    filter_subject(message)
+
+###############################################
+## To work from an mbox file ~/shagbot.mail
+## Uncomment the following two lines.
+#    for message in mailbox.mbox('~/shagbot.mail'):
+#        filter_subject(message)
