@@ -32,8 +32,10 @@ You will want to customize subjectifier before you install it.
 
  - Pick a default channel to post to in the notify_channel() function
 
- - Add or remove log_procedssed calls for more or less debugging.
+ - Add or remove log_procedssed() calls for more or less debugging.
    Also: pick the right path for their output.
 
-
+ - In filter_subject() you will want to define your own subject
+   matching regular expressions. Without these nothing will be matched
+   to make notifications about.
 
